@@ -1,35 +1,39 @@
 using RPGGame.Core.Characters;
 using RPGGame.Core.Items;
+
 namespace RPGGame.Core.Services
 {
     public class BattleService
     {
-        private static Random rng = new Random();
-        public void StartBattle(Character attacker, Character defender)
+        private readonly DiceRollService _diceRollService;
+        public BattleService()
         {
-            Console.WriteLine("Battle Begin!");
+            _diceRollService = new DiceRollService();
+        }
+        private static Random rng = new Random();
+        public void StartBattle(Character hero, Character enemy)
+        {
+            Console.WriteLine("🎮 Battle Start!");
+            var dice = new DiceRollService();
 
-            while (!attacker.IsDead && !defender.IsDead)
+            // 🎲 Roll to decide who goes first
+            bool heroGoesFirst = dice.Roll(1, 2) == 1;
+            Console.WriteLine(heroGoesFirst ? $"{hero.Name} goes first!" : $"{enemy.Name} goes first!");
+
+            Character first = heroGoesFirst ? hero : enemy;
+            Character second = heroGoesFirst ? enemy : hero;
+
+            while (!hero.IsDead && !enemy.IsDead)
             {
-                if (attacker.Health < 50)
+                first.DecideTurn(second, dice);
+                if (!second.IsDead)
                 {
-                    if (rng.NextDouble() <= 0.05)
-                        attacker.UseItem("Health Potion");
+                    second.DecideTurn(first, dice);
                 }
-                if (defender.Health < 50)
-                {
-                    if (rng.NextDouble() <= 0.15)
-                        defender.UseItem("Health Potion");
-                }
-
-                attacker.Attack(defender);
-                if (!defender.IsDead)
-                    defender.Attack(attacker);
             }
 
-            var winner = attacker.IsDead ? defender : attacker;
-
-            Console.WriteLine($"{winner.Name} wins the Battle!!");
+            var winner = hero.IsDead ? enemy : hero;
+            Console.WriteLine($"\n🏆 {winner.Name} wins the battle!");
         }
     }
 }
