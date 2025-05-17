@@ -16,6 +16,12 @@ This backlog tracks the development progress of the RPG Console Game project usi
 - [x] Used random chance logic in battle (`rng.NextDouble()`)
 - [x] Initial commit to Git repository with proper structure
 
+## FEAT Implement randomized turn order, dice roll attacks, critical hits, and health potion usage in BattleService and Character
+
+- [x] Added dice roll mechanic for turn order and attack critical hits
+- [x] Refactored DecideTurn logic to base Character class
+- [x] Implemented health potion usage below 50% HP with chance roll
+- [x] Battle output includes dice rolls, critical hits, healing, and final winner message
 ---
 
 ## 🔜 NEXT STEPS (PRIORITIZED)
